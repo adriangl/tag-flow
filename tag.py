@@ -1,6 +1,6 @@
-import os, sys, re
+import array, os, re, sys
 
-VERSION_REGEX = r'v{0,1}[0-9]+\.[0-9]+\.[0-9]+'
+VERSION_REGEX = r'[0-9]+\.[0-9]+\.[0-9]+'
 
 def isValidTag(tag):
 	if tag is None:
@@ -16,15 +16,15 @@ def isValidTag(tag):
 	return False
 
 def versionTuple(v):
-	components = v.replace("v", "").split(".")
+	components = v.split(".")
 	if not isValidTag(v):
 		raise ValueError('Invalid version detected: ' + v)
 
 	version = tuple(map(int, components))
 	return version
 
-def versionTupleToString(v):
-	return "v{}.{}.{}".format(v[0], v[1], v[2])
+def versionTupleToString(v, prefix=""):
+	return "{}{}.{}.{}".format(prefix, v[0], v[1], v[2])
 
 def scanCurrentBranchTagsAndGetBiggestVersion():
 	log_for_current_branch = os.popen('git log --decorate --pretty=oneline').read()
@@ -45,7 +45,7 @@ def scanCurrentBranchTagsAndGetBiggestVersion():
 def getBiggestVersionTagForCurrentBranch():
 	last_tag = os.popen("git describe --abbrev=0 --tags").read().replace("\n", "")
 	if not isValidTag(last_tag):
-		raise ValueError('Cannot read the last tag version. Please use a valid tag format (v1.2.3) for the last tagged commit in current branch')
+		raise ValueError('Cannot read the last tag version. Please use a valid tag format (1.2.3) for the last tagged commit in current branch')
 
 	current_version = versionTuple(last_tag)
 	biggest_version_for_branch = scanCurrentBranchTagsAndGetBiggestVersion()
