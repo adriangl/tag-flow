@@ -1,6 +1,6 @@
 import os, sys, re
 
-VERSION_REGEX = r'v[0-9]+\.[0-9]+\.[0-9]+'
+VERSION_REGEX = r'v{0,1}[0-9]+\.[0-9]+\.[0-9]+'
 
 def isValidTag(tag):
 	if tag is None:
